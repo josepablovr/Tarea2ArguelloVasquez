@@ -47,6 +47,7 @@ def single_thread(resultado):
     t.start()
     t.join()
     print("Finalizado en %s seconds ---" % (time.time() - start_time))
+    return resultado
 
 
 def multi_thread(resultado, distribucion, n_hilos):
@@ -61,3 +62,4 @@ def multi_thread(resultado, distribucion, n_hilos):
     for x in hilos:
         x.join()
     print("Finalizado en %s seconds ---" % (time.time() - start_time))
+    return resultado

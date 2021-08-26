@@ -15,3 +15,4 @@ def multi_thread(resultado, distribucion, n_hilos):
     for x in hilos:
         x.join()
     print("Finalizado en %s seconds ---" % (time.time() - start_time))
+    return resultado

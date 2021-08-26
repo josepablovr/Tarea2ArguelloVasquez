@@ -12,3 +12,4 @@ def single_thread(resultado):
     t.start()
     t.join()
     print("Finalizado en %s seconds ---" % (time.time() - start_time))
+    return resultado
