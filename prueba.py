@@ -1,24 +1,27 @@
 from generador_array import generar_array
 from generador_array import distribuir_hilos
-from single_thread import single_thread
-from multi_thread import multi_thread
+from generador_array import single_thread
+from generador_array import multi_thread
+import copy
+import time 
 
+resultado = generar_array(10)
+resultado1 = copy.copy(resultado)
+resultado2 = copy.copy(resultado)
 
-resultado = generar_array(5)
-
-resultado1 = resultado
-resultado2 = resultado
-# distribucion = distribuir_hilos(resultado, 4)
-
-
-distribucion = distribuir_hilos(resultado1, 4)
-print(resultado1)
-print("4 Hilos:")
-multi_thread(resultado1, distribucion, 4)
-print(resultado1)
-
-
-print(resultado2)
 print("1 Hilo:")
+
+start_time = time.time()
 single_thread(resultado2)
-print(resultado)
+print("Finalizado en %s seconds ---" % (time.time() - start_time))
+
+
+print("4 Hilos:")
+distribucion = distribuir_hilos(resultado1)
+
+start_time = time.time()
+multi_thread(resultado1, distribucion)
+print("Finalizado en %s seconds ---" % (time.time() - start_time))
+
+if resultado1 == resultado2:
+    print("Exito")
