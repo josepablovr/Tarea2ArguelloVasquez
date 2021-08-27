@@ -4,19 +4,16 @@ import time
 import copy
 import argparse
 
+
 def generar_array(X):
-    resultado = []
-    n = 0
-    for n in range(X):
-        n = n = random.randint(0, 100000)
-        n = pow(n, 2)
-        resultado.append(n)
+    resultado = list(range(X))
+    # n = 0
+    # for n in range(X):
+    #    n = n = random.randint(0, 100000)
+    #    n = pow(n, 2)
+    #    resultado.append(n)
 
     return resultado
-
-
-def mensaje(X):
-    print("flag")
 
 
 def distribuir_hilos(resultado):
@@ -39,6 +36,7 @@ def potencias(resultado, direccion):
     # array = []
     for e in range(direccion[0], direccion[1]):
         resultado[e] = resultado[e]**2
+        time.sleep(0.00000001)
         # for e in range(e):
         # array.insert(e, resultado[e])
     return resultado
@@ -90,14 +88,17 @@ def medir_tiempo(X, disp):
 
     if disp != 1:
         print("RESULTADOS DEL BENCHMARK:")
+        print("--------------------------------------")
         print("1 Hilo:")
         print("Finalizado en %s segundos ---" % t1)
         print("--------------------------------------")
         print("4 Hilos:")
         print("Finalizado en %s segundos ---" % t4)
+        print("--------------------------------------")
     else:
         f = open("Resultados_Benchmark.txt", "w")
         f.write("RESULTADOS DEL BENCHMARK:")
+        f.write("\n --------------------------------------")
         f.write("\n 1 Hilo:")
         f.write("\n Finalizado en %s segundos ---" % t1)
         f.write("\n --------------------------------------")
