@@ -6,12 +6,13 @@ from multiprocessing import Process
 
 
 def generar_array(X):
-    resultado = list(range(X))
-    # n = 0
-    # for n in range(X):
-    #    n = n = random.randint(0, 100000)
-    #    n = pow(n, 2)
-    #    resultado.append(n)
+    # resultado = list(range(X))
+    resultado = []
+    n = 0
+    for n in range(X):
+        n = n = random.randint(0, 100000)
+        n = pow(n, 2)
+        resultado.append(n)
 
     return resultado
 
@@ -23,7 +24,7 @@ def distribuir_hilos(resultado):
     n_hilos = 4
     for i in range(n_hilos):
         inicio = final - tamaño//n_hilos + 1
-        distribucion.append((inicio, final + 1))
+        distribucion.append((inicio, final+1))
         final = inicio - 1
         tamaño = final + 1
         n_hilos -= 1
@@ -32,10 +33,10 @@ def distribuir_hilos(resultado):
     return distribucion
 
 
-def potencias(resultado, direccion):
+def potencias(resultado):
     # array = []
-    for e in range(direccion[0], direccion[1]):
-        resultado[e] = resultado[e]**2
+    for e in resultado:
+        e = e**2
         # time.sleep(0.00000001)
         # for e in range(e):
         # array.insert(e, resultado[e])
@@ -43,11 +44,9 @@ def potencias(resultado, direccion):
 
 
 def single_thread(resultado):
-
+    #Se hace un solo proceso, en lugar de simplemente llamar la función para que el overhead no impacte significativamente la diferencia de tiempos
     if __name__ == "__main__":
-
-        dir = (0, len(resultado))
-        t = Process(target=potencias, args=(resultado, dir))
+        t = Process(target=potencias, args=(resultado, ))
         t.start()
         t.join()
 
@@ -56,17 +55,23 @@ def single_thread(resultado):
 
 def multi_thread(resultado, distribucion):
 
+    resultado_split = []
+    for e in range(4):
+        dir = distribucion[e]
+        resultado_split.append(resultado[dir[0]:dir[1]])
     hilos = []
-    if __name__ == "__main__":
+
+    if __name__ == "__main__": #Codigo necesario parra llamar subprocesos (evita que corra lo que está dentro varias veces, en el main hay otro)
         for i in range(4):
-            dir = distribucion[i]
-            t = Process(target=potencias, args=(resultado, dir))
+            t = Process(target=potencias, args=(resultado_split[i], )) #se asigna la funcion al subproceso
             hilos.append(t)
-            t.start()
+            t.start() #inicial el proceso
 
         for t in hilos:
-            t.join()
-
+            t.join() #Se espera a que termine el proceso
+    resultado = []
+    for x in range(4):
+        resultado.append(resultado_split[x])
     return resultado
 
 
