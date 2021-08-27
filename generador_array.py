@@ -1,8 +1,8 @@
 import random  # Se importa la libreria de numeros aleatorios
-import threading
 import time
 import copy
 import argparse
+from multiprocessing import Process
 
 
 def generar_array(X):
@@ -36,7 +36,7 @@ def potencias(resultado, direccion):
     # array = []
     for e in range(direccion[0], direccion[1]):
         resultado[e] = resultado[e]**2
-        time.sleep(0.00000001)
+        # time.sleep(0.00000001)
         # for e in range(e):
         # array.insert(e, resultado[e])
     return resultado
@@ -44,11 +44,12 @@ def potencias(resultado, direccion):
 
 def single_thread(resultado):
 
-    final = len(resultado)
-    direccion = (0, final)
-    t = threading.Thread(target=potencias, args=(resultado, direccion))
-    t.start()
-    t.join()
+    if __name__ == "__main__":
+
+        dir = (0, len(resultado))
+        t = Process(target=potencias, args=(resultado, dir))
+        t.start()
+        t.join()
 
     return resultado
 
@@ -56,14 +57,15 @@ def single_thread(resultado):
 def multi_thread(resultado, distribucion):
 
     hilos = []
+    if __name__ == "__main__":
+        for i in range(4):
+            dir = distribucion[i]
+            t = Process(target=potencias, args=(resultado, dir))
+            hilos.append(t)
+            t.start()
 
-    for i in range(4):
-        dir = distribucion[i]
-        t = threading.Thread(target=potencias, args=(resultado, dir))
-        t.start()
-        hilos.append(t)
-    for t in hilos:
-        t.join()
+        for t in hilos:
+            t.join()
 
     return resultado
 
@@ -111,15 +113,15 @@ def medir_tiempo(X, disp):
         return resultado1
 
 
-my_parser = argparse.ArgumentParser(description='Benchmark')
+if __name__ == "__main__":
+    my_parser = argparse.ArgumentParser(description='Benchmark')
 
-parser = argparse.ArgumentParser()
-parser.add_argument("X", help="Muestra el Benchmark de un recorrido de array",
-                    type=int)
-parser.add_argument("display", nargs="?",
-                    type=int)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("X", help="Benchmark de un recorrido de array",
+                        type=int)
+    parser.add_argument("display", nargs="?",
+                        type=int)
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
-
-medir_tiempo(args.X, args.display)
+    medir_tiempo(args.X, args.display)
