@@ -1,7 +1,7 @@
 import random  # Se importa la libreria de numeros aleatorios
 import time  # Se importa la libreria para medir el tiempo
 import argparse  # se importa la libreria para pasar argumentos por el shell
-from multiprocessing import Process  # importa la funcion para manejar procesos
+import threading  # se importa la libreria para manejar hilos
 
 
 # Descripción: función encargada de generar el array inicial de X elementos
@@ -46,25 +46,24 @@ def distribuir_hilos(length):
 def calc_potencias(resultado):
     for e in resultado:  # se recorre el array
         e = e**2  # se calcula la potencia de cada elemento
+        time.sleep(0.000001)  # se agrega un pequeño delay
 
     return resultado  # se retorna el array modificado
 
 
-# Descripcion: genera un solo proceso para calcular las potencias del array
+# Descripcion: genera un solo hilo para calcular las potencias del array
 # Entradas: el array sobre el que se desea realizar la operación
 # Salidas: el array modificado luego de realizar la operación
 def single_thread(resultado):
-    # Se hace un solo proceso, en lugar de simplemente llamar la función para
-    # que el overhead no impacte significativamente la diferencia de tiempos
-    if __name__ == "__main__":  # codigo necesario para llamar el subproceso
-        t = Process(target=calc_potencias, args=(resultado, ))
-        t.start()  # inicia el proceso
-        t.join()  # espera a que termine el proceso
+    # se define el hilo
+    t = threading.Thread(target=calc_potencias, args=(resultado, ))
+    t.start()  # inicia el hilo
+    t.join()  # espera a que termine el hilo
 
     return resultado  # retorna el array resultante
 
 
-# Descripcion: genera cuatro procesos para calcular las potencias del array
+# Descripcion: genera cuatro hilos para calcular las potencias del array
 # Entradas: el array sobre el que se desea realizar la operación
 # Salidas: el array modificado luego de realizar la operación
 def multi_thread(resultado, distribucion):
@@ -75,16 +74,15 @@ def multi_thread(resultado, distribucion):
         resultado_split.append(resultado[dir[0]:dir[1]])
         # se agrega cada sub array dentro de resultado_split
 
-    hilos = []  # lista de subprocesos (hilos)
+    hilos = []  # lista de hilos
 
-    if __name__ == "__main__":  # codigo necesario para llamar los subprocesos
-        for i in range(4):  # ciclo para inicializar los 4 subprocesos
-            t = Process(target=calc_potencias, args=(resultado_split[i], ))
-            hilos.append(t)  # agrega cada subproceso a la lista
-            t.start()  # inicia los procesos
+    for i in range(4):  # ciclo para inicializar los 4 hilos
+        t = threading.Thread(target=calc_potencias, args=(resultado_split[i],))
+        hilos.append(t)  # agrega cada hilo a la lista
+        t.start()  # inicia los hilos
 
-        for t in hilos:
-            t.join()  # espera a que termine cada proceso
+    for t in hilos:
+        t.join()  # espera a que termine cada hilo
 
     resultado = []  # reinicia el array de entrada
 
